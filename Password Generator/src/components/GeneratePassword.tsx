@@ -1,56 +1,48 @@
-import { create } from "zustand";
+import usePasswordStore from "../store/store"
 
-type PasswordState={
-  length:number;
-  includeNumbers:boolean;
-  includeSymbols:boolean;
-  includeUppercase:boolean;
-  includeLowercase:boolean;
-  generatedPassword:string;
-  setLength:(length:number)=>void;
-  toggleNumbers:()=>void;
-  toggleSymbols:()=>void;
-  toggleUppercase:()=>void;
-  toggleLowercase:()=>void;
-  generatePassword:()=>void;
+const GeneratePassword = () => {
+  const {
+    length,setLength,includeNumbers,toggleNumbers,includeSymbols,toggleSymbols,includeUppercase,toggleUppercase,includeLowercase,toggleLowercase,generatedPassword, generatePassword
+  } = usePasswordStore()
+
+  const handleGeneratePassword= ()=>generatePassword()
+  return (
+    <div className="p-8 w-[40rem] mx-auto bg-auto bg-white shadow-lg rounded-lg">
+      <h1 className="text-2xl font-bold mb-4">Password Generator</h1>
+      <div className="flex flex-col gap-4">
+        <div>
+          <label htmlFor="length" className="block text-sm font-medium text-gray-700">Password Length</label>
+          <input type="number" id="length" value={length} onChange={e=>setLength(+e.target.value)} min={4} max={64} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 " />
+        </div>
+        <div className="flex items-center">
+          <input type="checkbox" checked={includeNumbers} onChange={toggleNumbers} />
+          <label className="ml-2 text-sm">Inclue Numbers</label>
+        </div>
+        <div className="flex items-center">
+          <input type="checkbox" checked={includeSymbols} onChange={toggleSymbols} />
+          <label className="ml-2 text-sm">Inclue Symbols</label>
+        </div>
+        <div className="flex items-center">
+          <input type="checkbox" checked={includeUppercase} onChange={toggleUppercase} />
+          <label className="ml-2 text-sm">Inclue Uppercase</label>
+        </div>
+        <div className="flex items-center">
+          <input type="checkbox" checked={includeLowercase} onChange={toggleLowercase} />
+          <label className="ml-2 text-sm">Inclue Lowercase</label>
+        </div>
+        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onClick={handleGeneratePassword}>
+          Generate Password
+        </button>
+        {generatedPassword && (
+          <div className="mt-4 p-4 bg-gray-100 rounded-lg ">
+            <p className="text-lg break-all">
+              {generatedPassword}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  )
 }
-
-const GeneratePassword = create<PasswordState>((set)=>({
-  length:0,
-  includeNumbers:true,
-  includeSymbols:true,
-  includeUppercase:true,
-  includeLowercase:true,
-  generatedPassword:'',
-  
-  setLength:(length)=>set({length}),
-  
-  toggleNumbers:()=>set(state=>({includeNumbers: !state.includeNumbers})),
-  
-  toggleSymbols:()=>set(state=>({includeSymbols:!state.includeSymbols})),
-  
-  toggleUppercase:()=>set(state=>({includeUppercase:!state.includeUppercase})),
-  
-  toggleLowercase:()=>set(state=>({includeLowercase:!state.includeLowercase})),
-  
-  generatePassword:()=>set(state=>{
-    const numbers="0123456789";
-    const symbols="!@#$%^&*(){}[]_+";
-    const uppercase="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    const lowercase="abcdefghijklmnopqrstuvwxyz"
-    let characters='';
-
-    if(state.includeNumbers) characters+=numbers;
-    if(state.includeSymbols) characters+=symbols;
-    if(state.includeUppercase) characters+=uppercase;
-    if(state.includeLowercase) characters+=lowercase;
-
-    let password=''
-    for(let i=0;i<state.length;i++){
-      password+=characters[Math.floor(Math.random()*characters.length)]
-    }
-    return {generatedPassword:password}
-  })
-}))
 
 export default GeneratePassword
