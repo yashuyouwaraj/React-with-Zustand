@@ -16,10 +16,12 @@ interface ProductState {
 interface FilterState {
   selectedCountries: string[];
   selectedColors: string[];
-  selectedPriceRange: { min: number; max: number } | null;
+  selectedPriceRange: { min: number; max: number; label: string } | null;
   setSelectedCountries: (countries: string[]) => void;
   setSelectedColors: (colors: string[]) => void;
-  setSelectedPriceRange: (range: { min: number; max: number } | null) => void;
+  setSelectedPriceRange: (
+    range: { min: number; max: number; label: string } | null
+  ) => void;
   clearFilters: () => void;
 }
 
@@ -61,4 +63,5 @@ export const useFilterStore = create<FilterState>((set) => ({
       selectedColors: [],
       selectedPriceRange: null,
     }),
+    
 }));
